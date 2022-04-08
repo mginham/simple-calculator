@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="Calculator.css">
+    <title>Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <table class = "calculator" >
+            
+            <tr>
+                <td colspan = "4"> <input class = "displayField" type = "text" id = "outputValue" disabled/> </td>
+            </tr>
+            <tr>
+                <td> 
+                    <input class = "modeButton" type = "radio" name = "modeBtn" id = "modeBtn" value = "INFIX" onclick = "clearCalc()" checked/>
+                    <label for="modeBtn">INFIX</label>
+                </td>
+                <td> 
+                    <input class = "modeButton" type = "radio" name = "modeBtn" id = "modeBtn" value = "RPN" onclick = "clearCalc()"/>
+                    <label for="modeBtn">RPN</label>
+                </td>
+                <td></td>
+                <td> <input class = "opButton" type = "button" value = "C" onclick = "clearCalc()"/> </td>
+            </tr>
+            <tr>
+                <td> <input class = "numButton" type = "button" value = "1" onclick = "manageKeyClick('1')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "2" onclick = "manageKeyClick('2')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "3" onclick = "manageKeyClick('3')"/> </td>
+                <td> <input class = "opButton" type = "button" value = "/" onclick = "manageKeyClick('/')"/> </td>
+            </tr>
+            <tr>
+                <td> <input class = "numButton" type = "button" value = "4" onclick = "manageKeyClick('4')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "5" onclick = "manageKeyClick('5')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "6" onclick = "manageKeyClick('6')"/> </td>
+                <td> <input class = "opButton" type = "button" value = "-" onclick = "manageKeyClick('-')"/> </td>
+            </tr>
+            <tr>
+                <td> <input class = "numButton" type = "button" value = "7" onclick = "manageKeyClick('7')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "8" onclick = "manageKeyClick('8')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "9" onclick = "manageKeyClick('9')"/> </td>
+                <td> <input class = "opButton" type = "button" value = "+" onclick = "manageKeyClick('+')"/> </td>
+            </tr>
+            <tr>
+                <td> <input class = "numButton" type = "button" value = "." onclick = "manageKeyClick('.')"/> </td>
+                <td> <input class = "numButton" type = "button" value = "0" onclick = "manageKeyClick('0')"/> </td>
+                <td> <input class = "opButton" type = "button" value = "=" onclick = "manageKeyClick('=')"/> </td>
+                <td> <input class = "opButton" type = "button" value = "*" onclick = "manageKeyClick('*')"/> </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        var operand = '';
+        var operator = '';
+        var result = '';
+
+        // Reset all values
+        function clearCalc() {
+            operand = '';
+            operator = '';
+            result = '';
+
+            document.getElementById("outputValue").value = "";
+        }
+
+        // Determine the appropriate action based on the current input and known data
+        function manageKeyClick(key) {
+            // Note that this application does not have error handling, so any incorrect inputs (including incorrect orders of inputs) may cause unexpected results
+            // Ensure the appropriate mode is selected using the radio button to refresh between different modes of calculations
+
+            if(key == "+") { // Addition
+                if(result == '') { // INFIX mode: still need a second operand for calculation
+                    operator = "+";
+
+                    result = operand; // Use the result as a pseudo operand
+                    operand = '';
+                    
+                    display(operator);
+                }
+                else if(operator == "=") { // RPN mode: all components are present for calculation
+                    let temp;
+
+                    temp = parseInt(result) + parseInt(operand);
+
+                    // Display the result to the user
+                    result = temp.toString();
+                    display(result);
+
+                    // Store the result in case more operations will be made and reset the other values
+                    operand = '';
+                }
+            }
+            else if(key == "-") { // Subtraction
+                if(result == '') { // INFIX mode: still need a second operand for calculation
+                    operator = "-";
+
+                    result = operand; // Use the result as a pseudo operand
+                    operand = '';
+                    
+                    display(operator);
+                }
+                else if(operator == "=") { // RPN mode: all components are present for calculation
+                    let temp;
+
+                    temp = parseInt(result) - parseInt(operand);
+
+                    // Display the result to the user
+                    result = temp.toString();
+                    display(result);
+
+                    // Store the result in case more operations will be made and reset the other values
+                    operand = '';
+                }
+            }
+            else if(key == "*") { // Multiplication
+                if(result == '') { // INFIX mode: still need a second operand for calculation
+                    operator = "*";
+
+                    result = operand; // Use the result as a pseudo operand
+                    operand = '';
+                    
+                    display(operator);
+                }
+                else if(operator == "=") { // RPN mode: all components are present for calculation
+                    let temp;
+
+                    temp = parseInt(result) * parseInt(operand);
+
+                    // Display the result to the user
+                    result = temp.toString();
+                    display(result);
+
+                    // Store the result in case more operations will be made and reset the other values
+                    operand = '';
+                }
+            }
+            else if(key == "/") { // Division
+                if(result == '') { // INFIX mode: still need a second operand for calculation
+                    operator = "/";
+
+                    result = operand; // Use the result as a pseudo operand
+                    operand = '';
+                    
+                    display(operator);
+                }
+                else if(operator == "=") { // RPN mode: all components are present for calculation
+                    let temp;
+
+                    temp = parseInt(result) / parseInt(operand);
+
+                    // Display the result to the user
+                    result = temp.toString();
+                    display(result);
+
+                    // Store the result in case more operations will be made and reset the other values
+                    operand = '';
+                }
+            }
+            else if(key == "=") { // Enter
+                if(operator == '') { // RPN mode: the operator is yet to be determined
+                    operator = "=";
+
+                    result = operand; // Use the result as a pseudo operand
+                    operand = '';
+                    
+                    display(operator);
+                }
+                else { // INFIX mode: the operator is known
+                    let temp;
+
+                    // Choose the appropriate calculation based on the selected operator
+                    if(operator == '+') {
+                        temp = parseInt(result) + parseInt(operand);
+                    }
+                    else if(operator == '-') {
+                        temp = parseInt(result) - parseInt(operand);
+                    }
+                    else if(operator == '*') {
+                        temp = parseInt(result) * parseInt(operand);
+                    }
+                    else if(operator == '/') {
+                        temp = parseInt(result) / parseInt(operand);
+                    }
+
+                    // Display the result to the user
+                    result = temp.toString();
+                    display(result);
+
+                    // Store the result in case more operations will be made and reset the other values
+                    operand = result; 
+                    result = '';
+                    operator = '';
+                }
+                
+            }
+            else { // Numeric digit
+                operand += key; // Record the number input
+                display(operand); // Display the number
+            }
+        }
+
+        // Display the output value
+        function display(displayVal) {
+            document.getElementById("outputValue").value = displayVal;
+        }
+    </script>
+</body>
+</html>
